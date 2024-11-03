@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = 'https://jsonplaceholder.typicode.com/todos';
+  final String baseUrl = 'http://localhost:3000/todos';
 
   Future<List<dynamic>> fetchTodos() async {
     final response = await http.get(Uri.parse(baseUrl));

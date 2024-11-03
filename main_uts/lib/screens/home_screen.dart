@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:main_uts/services/api_service.dart';
-import 'add_todo_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,8 +19,56 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchTodos() async {
-    todos = await apiService.fetchTodos();
+    final fetchedTodos = await apiService.fetchTodos();
+    todos = fetchedTodos.map((todo) {
+      return {
+        'id': int.tryParse(todo['id'].toString()) ?? todo['id'],
+        'title': todo['title'],
+        'completed': todo['completed'],
+      };
+    }).toList();
     setState(() {});
+  }
+
+  void _showAddDialog(BuildContext context) {
+    TextEditingController titleController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Todo'),
+          content: TextField(
+            controller: titleController,
+            decoration: const InputDecoration(labelText: 'Title'),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Add'),
+              onPressed: () async {
+                if (titleController.text.isNotEmpty) {
+                  await apiService.addTodo({
+                    'title': titleController.text,
+                    'completed': false,
+                    'id': (todos.length + 1).toString(),
+                  });
+                  if (mounted) {
+                    Navigator.of(context).pop();
+                    _fetchTodos();
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showEditDialog(BuildContext context, Map<String, dynamic> todo) {
@@ -126,10 +173,7 @@ class HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddTodoScreen()),
-          ).then((_) => _fetchTodos());
+          _showAddDialog(context);
         },
         child: const Icon(Icons.add),
       ),

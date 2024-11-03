@@ -1,0 +1,22 @@
+{
+  "name": "tugas-pra-uts",
+  "version": "1.0.0",
+  "main": "db.json",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aleedoe/mobile-and-web-service.git"
+  },
+  "author": "aleedoe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aleedoe/mobile-and-web-service/issues"
+  },
+  "homepage": "https://github.com/aleedoe/mobile-and-web-service#readme",
+  "description": "",
+  "dependencies": {
+    "json-server": "^1.0.0-beta.3"
+  }
+}
